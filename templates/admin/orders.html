@@ -1,0 +1,122 @@
+{% extends "admin/admin_base.html" %}
+{% block content %}
+
+<h3 class="mb-4">📦 Manajemen Pesanan</h3>
+
+<!-- ==== Ringkasan Pesanan ==== -->
+<div class="row mb-4">
+
+  <div class="col-md-3">
+    <div class="card border-primary shadow-sm">
+      <div class="card-body text-center">
+        <h6>Total Pesanan</h6>
+        <h3 class="text-primary">{{ total_orders }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card border-warning shadow-sm">
+      <div class="card-body text-center">
+        <h6>Belum Diproses</h6>
+        <h3 class="text-warning">{{ pending_orders }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card border-info shadow-sm">
+      <div class="card-body text-center">
+        <h6>Diproses</h6>
+        <h3 class="text-info">{{ processing_orders }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card border-success shadow-sm">
+      <div class="card-body text-center">
+        <h6>Selesai</h6>
+        <h3 class="text-success">{{ completed_orders }}</h3>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ==== Tabel Data Pesanan ==== -->
+<div class="card shadow-sm">
+  <div class="card-body">
+    <table id="tabelPesanan" class="table table-striped table-bordered align-middle">
+      <thead class="table-dark text-center">
+        <tr>
+          <th>No</th>
+          <th>Pelanggan</th>
+          <th>Produk</th>
+          <th>Tanggal</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for o in orders %}
+        <tr>
+          <td>{{ loop.index }}</td>
+
+          <td>
+            <strong>{{ o.nama_pelanggan }}</strong><br>
+            <small>{{ o.email }}</small>
+          </td>
+
+          <td>{{ o.nama_produk }}</td>
+
+         <td>{{ o.tanggal or "—" }}</td>
+
+<td>
+  <strong>Rp {{ "{:,.0f}".format(o.total_harga or 0) }}</strong>
+</td>
+
+          <td class="text-center">
+            {% if o.status == "pending" %}
+              <span class="badge bg-warning">Pending</span>
+            {% elif o.status == "processing" %}
+              <span class="badge bg-info">Diproses</span>
+            {% elif o.status == "shipping" %}
+              <span class="badge bg-primary">Dikirim</span>
+            {% elif o.status == "completed" %}
+              <span class="badge bg-success">Selesai</span>
+            {% else %}
+              <span class="badge bg-danger">Dibatalkan</span>
+            {% endif %}
+          </td>
+
+          <td class="text-center">
+            <a href="{{ url_for('admin_update_order_status', id_order=o.id_order) }}" 
+               class="btn btn-primary btn-sm">
+               <i class="bi bi-eye"></i> Detail
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+  $('#tabelPesanan').DataTable({
+    "language": {
+      "search": "Cari:",
+      "lengthMenu": "Tampilkan _MENU_ entri",
+      "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri"
+    }
+  });
+});
+</script>
+
+{% endblock %}

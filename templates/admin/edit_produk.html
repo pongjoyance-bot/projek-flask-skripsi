@@ -1,0 +1,197 @@
+{% extends "admin/admin_base.html" %}
+{% block content %}
+
+<div class="card shadow-sm">
+  <div class="card-header bg-warning text-dark">
+    <h5 class="mb-0">Edit Produk</h5>
+  </div>
+
+  <div class="card-body">
+    <form method="POST" enctype="multipart/form-data">
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label>Nama Produk</label>
+          <input type="text" name="nama_produk" class="form-control" value="{{ produk.nama_produk }}" required>
+        </div>
+
+        <div class="col-md-6">
+          <label>Merek</label>
+          <select name="id_brand" class="form-select" required>
+            <option value="">-- Pilih Merek --</option>
+            {% for b in semua_brand %}
+              <option value="{{ b.id_brand }}" 
+                {% if b.id_brand == produk.id_brand %} selected {% endif %}>
+                {{ b.nama_brand }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label>Spesifikasi</label>
+        <textarea name="spesifikasi" class="form-control" rows="3">{{ produk.spesifikasi }}</textarea>
+      </div>
+
+      
+      <div class="row mb-3">
+
+
+  <div class="col-md-4">
+    <label>Baterai (mAh)</label>
+    <input type="number" name="baterai"
+           class="form-control"
+           value="{{ produk.baterai }}"
+           required>
+  </div>
+</div>
+<div class="row mb-3">
+
+  <div class="col-md-4">
+    <label>Chipset</label>
+    <input type="text"
+           name="chipset"
+           class="form-control"
+           value="{{ produk.chipset }}">
+  </div>
+
+  <div class="col-md-4">
+    <label>Layar</label>
+    <input type="text"
+           name="layar"
+           class="form-control"
+           value="{{ produk.layar }}">
+  </div>
+
+  <div class="col-md-4">
+    <label>Kamera</label>
+    <input type="text"
+           name="kamera"
+           class="form-control"
+           value="{{ produk.kamera }}">
+  </div>
+
+</div>
+
+<div class="row mb-3">
+
+  <div class="col-md-6">
+    <label>Operating System</label>
+    <input type="text"
+           name="os"
+           class="form-control"
+           value="{{ produk.os }}">
+  </div>
+
+  <div class="col-md-6">
+    <label>Fitur</label>
+    <input type="text"
+           name="fitur"
+           class="form-control"
+           value="{{ produk.fitur }}">
+  </div>
+
+</div>
+
+<div class="mb-3">
+  <label class="fw-bold">Varian Produk</label>
+
+  {% for v in varian_data %}
+  <div class="border rounded p-3 mb-3 bg-light">
+
+    <input type="hidden" name="id_varian[]" value="{{ v.id_varian }}">
+    <input type="hidden" name="id_detail[]" value="{{ v.id_detail }}">
+
+    <div class="row mb-2">
+      <div class="col-md-4">
+        <label>Nama Varian</label>
+        <input type="text"
+               name="nama_varian[]"
+               class="form-control"
+               value="{{ v.nama_varian }}"
+               required>
+      </div>
+
+      <div class="col-md-4">
+        <label>Harga</label>
+        <input type="number"
+               name="harga_varian[]"
+               class="form-control"
+               value="{{ v.harga }}"
+               required>
+      </div>
+
+      <div class="col-md-4">
+        <label>Warna</label>
+        <input type="text"
+               name="warna[]"
+               class="form-control"
+               value="{{ v.warna }}"
+               required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <label>Stok</label>
+        <input type="number"
+               name="stok_warna[]"
+               class="form-control"
+               value="{{ v.stok }}"
+               min="0"
+               required>
+      </div>
+    </div>
+
+  </div>
+  {% endfor %}
+</div>
+
+
+      <div class="mb-3">
+        <label>Gambar Produk</label>
+        <input type="file" name="gambar" class="form-control">
+
+        <small class="text-muted d-block mt-2">Gambar saat ini:</small>
+<img src="{{ url_for('static', filename=produk.gambar) }}"
+     class="img-thumbnail"
+     style="max-height: 150px;">
+
+      </div>
+      <div class="mb-3">
+  <label>Tambah / Ganti Gambar Detail (maks 3)</label>
+  <input type="file" name="gambar_detail" multiple class="form-control" accept="image/*">
+  <small class="text-muted">
+    Jika diisi, gambar detail lama akan diganti
+  </small>
+</div>
+
+
+      <button type="submit" class="btn btn-warning">Perbarui</button>
+      <a href="{{ url_for('admin_produk') }}" class="btn btn-secondary">Kembali</a>
+
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+<script>
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('tambah-warna')) {
+    const container = document.getElementById('warna-container');
+    const clone = e.target.closest('.warna-item').cloneNode(true);
+    clone.querySelectorAll('input').forEach(i => i.value = '');
+    container.appendChild(clone);
+  }
+
+  if (e.target.classList.contains('hapus-warna')) {
+    const item = e.target.closest('.warna-item');
+    if (document.querySelectorAll('.warna-item').length > 1) {
+      item.remove();
+    }
+  }
+});
+</script>
+

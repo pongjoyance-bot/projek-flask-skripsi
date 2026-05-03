@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Evaluasi Sistem Rekomendasi</h5>
+    </div>
+
+    <div class="card-body">
+
+      <table class="table table-bordered table-striped text-center">
+        <thead class="table-dark">
+          <tr>
+            <th>Parameter</th>
+            <th>Hasil</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>Nama User</td>
+            <td>{{ hasil.nama }}</td>
+          </tr>
+
+          <tr>
+            <td>MAE</td>
+            <td>{{ hasil.mae }}</td>
+          </tr>
+
+          <tr>
+            <td>Precision@5</td>
+            <td>{{ hasil.precision }}</td>
+          </tr>
+
+          <tr>
+            <td>Recall@5</td>
+            <td>{{ hasil.recall }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

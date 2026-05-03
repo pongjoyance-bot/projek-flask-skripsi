@@ -1,0 +1,97 @@
+{% extends "admin/admin_base.html" %}
+{% block content %}
+
+<div id="nota" class="container my-4 p-4 border shadow-sm" style="max-width:800px; background:#fff;">
+
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="mb-0">Gadget Store</h4>
+      <small>Jl. Andy Mapayukki, Rantepao</small>
+    </div>
+    <div class="text-end">
+      <strong>Nota #: {{ order.id_order }}</strong><br>
+      <small>{{ order.tanggal_order or '-' }}</small>
+    </div>
+  </div>
+  <hr>
+
+  <!-- PELANGGAN -->
+  <div class="mb-3">
+    <strong>Pelanggan:</strong> {{ order.user_nama }}<br>
+    <small>{{ order.user_email }}</small>
+  </div>
+
+  <!-- TABEL PRODUK -->
+  <table class="table table-bordered">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>Produk</th>
+        <th>Jumlah</th>
+        <th>Harga</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+  {% for it in items %}
+  <tr>
+    <td>{{ loop.index }}</td>
+
+    <!-- Kolom Produk + Varian -->
+    <td>
+      <strong>{{ it.nama_produk }}</strong><br>
+      <small class="text-muted">
+        {{ it.nama_varian }}
+        {% if it.warna %}
+          - {{ it.warna }}
+        {% endif %}
+      </small>
+    </td>
+
+    <td>{{ it.jumlah }}</td>
+    <td>{{ it.harga | rupiah }}</td>
+    <td>{{ it.subtotal | rupiah }}</td>
+  </tr>
+  {% endfor %}
+
+  <tr>
+  <td colspan="4" class="text-end">Subtotal</td>
+  <td>{{ order.total_harga | rupiah }}</td>
+</tr>
+
+<tr>
+  <td colspan="4" class="text-end">Ongkir</td>
+  <td>{{ order.ongkir | rupiah }}</td>
+</tr>
+
+<tr class="fw-bold">
+  <td colspan="4" class="text-end">Total Bayar</td>
+  <td>
+    {{ (order.total_harga + (order.ongkir or 0)) | rupiah }}
+  </td>
+</tr>
+
+
+</tbody>
+  </table>
+
+  <!-- METODE PEMBAYARAN -->
+  <div class="mb-3">
+    <strong>Metode Pembayaran:</strong> {{ order.metode_pembayaran or '-' }}
+  </div>
+
+  <!-- FOOTER -->
+  <div class="text-center mt-4">
+    <small>Terima kasih telah berbelanja di Gadget Store!</small>
+  </div>
+
+  <!-- TOMBOL CETAK -->
+  <div class="mt-3 text-end no-print">
+    <button onclick="window.print()" class="btn btn-dark btn-sm">
+      🖨 Cetak Nota
+    </button>
+  </div>
+
+</div>
+{% endblock %}

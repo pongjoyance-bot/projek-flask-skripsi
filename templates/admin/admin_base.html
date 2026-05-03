@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title or "Dashboard Admin " }}</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+  <style>
+    body { background-color: #f8f9fa; }
+    .sidebar {
+      height: 100vh;
+      background-color: #343a40;
+      color: white;
+      padding-top: 20px;
+      position: fixed;
+      width: 230px;
+    }
+    .sidebar h4 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: bold;
+    }
+    .sidebar a {
+      color: #ccc;
+      text-decoration: none;
+      display: block;
+      padding: 10px 20px;
+      transition: background-color 0.2s;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      background-color: #495057;
+      color: white;
+    }
+    .content {
+      margin-left: 250px;
+      padding: 25px;
+    }
+    .table img {
+      width: 70px;
+      border-radius: 5px;
+    }
+    @media print {
+      body * {
+        visibility: hidden; /* sembunyikan semua elemen */
+      }
+
+      #nota, #nota * {
+        visibility: visible; /* tampilkan nota saja */
+      }
+
+      #nota {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+
+      /* sembunyikan tombol cetak saat print */
+      .no-print {
+        display: none !important;
+      }
+    }
+
+
+    
+
+  </style>
+</head>
+
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <h4>Batara Media</h4>
+
+ 
+
+  <!-- Dashboard -->
+  <a href="{{ url_for('admin_dashboard') }}" 
+     class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+    <i class="bi bi-speedometer2"></i> Dashboard
+  </a>
+
+  <!-- Produk -->
+  <a href="{{ url_for('admin_produk') }}" 
+     class="{% if request.endpoint in ['admin_produk', 'tambah_produk', 'edit_produk'] %}active{% endif %}">
+    <i class="bi bi-box-seam"></i> Produk
+  </a>
+
+  <!-- Brand / Kategori (opsional tapi umum) -->
+ <a href="{{ url_for('admin_brand_list') }}"
+   class="{% if request.endpoint in ['admin_brand_list','admi_brand_add','admin_brand_edit'] %}active{% endif %}">
+    <i class="bi bi-tags"></i> Brand
+</a>
+
+
+
+  <!-- User Management -->
+  <a href="{{ url_for('admin_user') }}" 
+     class="{% if request.endpoint in ['admin_users', 'detail_user'] %}active{% endif %}">
+    <i class="bi bi-people"></i> User
+  </a>
+
+  <!-- Pesanan -->
+  <a href="{{ url_for('admin_orders') }}" 
+     class="{% if request.endpoint in ['admin_orders', 'detail_order'] %}active{% endif %}">
+    <i class="bi bi-receipt"></i> Pesanan
+  </a>
+
+ 
+
+<!-- Ongkir -->
+<a href="{{ url_for('admin_ongkir') }}" 
+   class="{% if request.endpoint in ['admin_ongkir','tambah_ongkir','edit_ongkir'] %}active{% endif %}">
+  <i class="bi bi-truck"></i> Ongkir
+</a>
+
+
+  <!-- Laporan -->
+  <a href="{{ url_for('admin_laporan') }}" 
+     class="{% if request.endpoint == 'admin_laporan' %}active{% endif %}">
+    <i class="bi bi-bar-chart"></i> Laporan
+  </a>
+
+  <a href="{{ url_for('admin_evaluasi') }}" 
+   class="{% if request.endpoint == 'admin_evaluasi' %}active{% endif %}">
+   <i class="bi bi-graph-up"></i> Evaluasi
+</a>
+
+ 
+
+  <!-- Logout -->
+  <a href="{{ url_for('logout') }}">
+    <i class="bi bi-box-arrow-right"></i> Logout
+  </a>
+</div>
+
+
+<!-- Konten utama -->
+<div class="content">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>{{ title or "Dashboard Admin" }}</h3>
+    <span class="text-muted">{{ current_date }} | Admin</span>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="container mb-3">
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</div>
+
+<!-- Script -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+

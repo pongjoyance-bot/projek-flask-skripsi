@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.detail-card {
+  border-radius: 20px;
+}
+
+.product-img {
+  width: 85px;
+  height: 85px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+.timeline {
+  border-left: 3px solid #0d6efd;
+  margin-left: 15px;
+  padding-left: 20px;
+}
+
+.timeline-step {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.timeline-step::before {
+  content: '';
+  width: 14px;
+  height: 14px;
+  background: #0d6efd;
+  border-radius: 50%;
+  position: absolute;
+  left: -29px;
+  top: 2px;
+}
+
+.disabled-step {
+  opacity: 0.3;
+}
+
+.star-rating {
+  direction: rtl;
+  display: inline-flex;
+  font-size: 26px;
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating label {
+  color: #ddd;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #ffc107;
+}
+
+.star-rating input:checked ~ label {
+  color: #ffc107;
+}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<div class="container my-5">
+  <div class="row g-4">
+
+    <!-- ================= KIRI ================= -->
+    <div class="col-lg-8">
+
+      <a href="{{ url_for('profil_index') }}" class="btn btn-outline-secondary mb-3">
+        ← Kembali ke Pesanan
+      </a>
+
+      <h3 class="fw-bold mb-4">
+        Detail Pesanan #{{ order.id_order }}
+      </h3>
+
+      <!-- STATUS PESANAN -->
+      <div class="card shadow-sm border-0 detail-card mb-4">
+        <div class="card-body">
+          <h5 class="fw-semibold mb-3">Status Pesanan</h5>
+
+          <div class="timeline">
+
+            <div class="timeline-step">
+              <strong>Diproses</strong><br>
+              <small>Diterima sistem</small>
+            </div>
+
+            <div class="timeline-step
+              {% if order.status_pesanan not in ['diproses/packing', 'dikirim', 'selesai'] %}
+                disabled-step
+              {% endif %}
+            ">
+              <strong>Dikemas</strong><br>
+              <small>Barang sedang dikemas</small>
+            </div>
+
+            <div class="timeline-step
+              {% if order.status_pesanan not in ['dikirim', 'selesai'] %}
+                disabled-step
+              {% endif %}
+            ">
+              <strong>Dikirim</strong><br>
+              <small>Menuju alamat tujuan</small>
+            </div>
+
+            <div class="timeline-step
+              {% if order.status_pesanan != 'selesai' %}
+                disabled-step
+              {% endif %}
+            ">
+              <strong>Diterima</strong><br>
+              <small>Pesanan telah sampai</small>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUK -->
+      <div class="card shadow-sm border-0 detail-card">
+        <div class="card-body">
+          <h5 class="fw-semibold mb-3">Produk Dibeli</h5>
+
+          {% for i in items %}
+          <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <div class="d-flex">
+              <img src="/static/img/{{ i.gambar_clean }}" class="product-img" alt="Produk">
+
+              <div class="ms-3">
+                <h6 class="fw-bold mb-1">{{ i.nama_produk }}</h6>
+                <small>Jumlah: {{ i.jumlah }}</small><br>
+                <strong>{{ i.harga | rupiah }}</strong>
+              </div>
+            </div>
+
+            {% if order.status_pesanan == 'selesai' %}
+
+  {% if i.id_rating %}
+    <!-- kondisi bila pengguna sudah beri rating -->
+    <span class="badge bg-success px-3 py-2">
+      ✔ Sudah Dinilai
+    </span>
+  {% else %}
+    <!-- kondisi belum di rating -->
+    <button class="btn btn-sm btn-warning"
+            data-bs-toggle="modal"
+            data-bs-target="#modalRating{{ i.id_produk }}">
+      ⭐ Beri Rating
+    </button>
+
+    <div class="modal fade" id="modalRating{{ i.id_produk }}" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <form method="POST"
+            action="{{ url_for('rating', id_order=order.id_order, id_produk=i.id_produk) }}">
+
+        <div class="modal-header">
+          <h5 class="modal-title">
+            ⭐ Beri Rating
+          </h5>
+          <button type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <p class="fw-semibold">{{ i.nama_produk }}</p>
+
+          <!-- STAR RATING -->
+          <div class="star-rating mb-3">
+            <input type="radio" id="star5{{ i.id_produk }}" name="rating" value="5" required>
+            <label for="star5{{ i.id_produk }}">★</label>
+
+            <input type="radio" id="star4{{ i.id_produk }}" name="rating" value="4">
+            <label for="star4{{ i.id_produk }}">★</label>
+
+            <input type="radio" id="star3{{ i.id_produk }}" name="rating" value="3">
+            <label for="star3{{ i.id_produk }}">★</label>
+
+            <input type="radio" id="star2{{ i.id_produk }}" name="rating" value="2">
+            <label for="star2{{ i.id_produk }}">★</label>
+
+            <input type="radio" id="star1{{ i.id_produk }}" name="rating" value="1">
+            <label for="star1{{ i.id_produk }}">★</label>
+          </div>
+
+          <!-- ULASAN -->
+          <textarea name="ulasan"
+                    class="form-control"
+                    rows="3"
+                    placeholder="Tulis ulasan (opsional)..."></textarea>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal">Batal</button>
+
+          <button type="submit"
+                  class="btn btn-warning">
+            ⭐ Kirim
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+  {% endif %}
+
+{% endif %}
+
+
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= KANAN ================= -->
+    <div class="col-lg-4">
+
+      <!-- ALAMAT -->
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="mb-3">Alamat Pengiriman</h5>
+
+          <p>
+            <strong>Alamat Lengkap:</strong><br>
+            {{ order.alamat_lengkap }}
+          </p>
+
+          <p>
+            {{ order.kota }}, {{ order.provinsi }}, {{ order.negara }}
+          </p>
+
+          {% if order.alamat_map %}
+            <hr>
+            <p class="mb-1"><strong>Lokasi dari Peta:</strong></p>
+            <p class="small text-muted">{{ order.alamat_map }}</p>
+
+            {% if order.lat and order.lng %}
+              <a href="https://www.google.com/maps?q={{ order.lat }},{{ order.lng }}"
+                 target="_blank"
+                 class="btn btn-sm btn-outline-primary">
+                📍 Lihat di Google Maps
+              </a>
+            {% endif %}
+          {% else %}
+            <p class="text-muted small">
+              Lokasi peta tidak dipilih (COD)
+            </p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- RINGKASAN -->
+      <div class="card shadow-sm border-0 detail-card">
+        <div class="card-body">
+          <h5 class="fw-semibold mb-3">Ringkasan Pembayaran</h5>
+
+          <p><strong>Metode:</strong> {{ order.metode_pembayaran }}</p>
+          <p><strong>Ongkir:</strong> {{ order.ongkir | rupiah }}</p>
+
+          <hr>
+
+          <h5 class="fw-bold text-primary">
+            Total: {{ order.total_harga | rupiah }}
+          </h5>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+{% if notif %}
+<div class="modal fade" id="notifModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center p-4">
+
+      {% if notif == 'success' %}
+        <h4 class="text-success mb-3">✅ Rating Berhasil!</h4>
+        <p>Terima kasih sudah memberikan penilaian.</p>
+      {% elif notif == 'exists' %}
+        <h4 class="text-warning mb-3">⚠ Sudah Dinilai</h4>
+        <p>Kamu sudah memberi rating untuk produk ini.</p>
+      {% endif %}
+
+      <button class="btn btn-primary mt-3"
+              data-bs-dismiss="modal">
+        OK
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  var myModal = new bootstrap.Modal(document.getElementById('notifModal'));
+  myModal.show();
+</script>
+{% endif %}
+
+
+<!-- MAP -->
+{% if order.lat and order.lng %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<div class="container mb-4">
+  <div id="userMap"
+       data-lat="{{ order.lat }}"
+       data-lng="{{ order.lng }}"
+       style="height:250px;border-radius:12px;">
+  </div>
+</div>
+
+<script>
+  const mapEl = document.getElementById('userMap');
+  const lat = parseFloat(mapEl.dataset.lat);
+  const lng = parseFloat(mapEl.dataset.lng);
+
+  const map = L.map('userMap').setView([lat, lng], 15);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  L.marker([lat, lng]).addTo(map)
+    .bindPopup("Lokasi Pengiriman")
+    .openPopup();
+</script>
+{% endif %}
+
+{% endblock %}

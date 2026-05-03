@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}batara media{% endblock %}</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    body { background-color: #f8f9fa; }
+    .sidebar {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 15px;
+    }
+    .sidebar h5 {
+      background-color: #000;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .sidebar ul { list-style: none; padding-left: 0; }
+    .sidebar ul li a {
+      display: block;
+      padding: 8px 10px;
+      color: #333;
+      text-decoration: none;
+      border-bottom: 1px solid #eee;
+    }
+    .sidebar ul li a:hover {
+      color: #007bff;
+      background-color: #f1f1f1;
+      border-radius: 5px;
+    }
+    .product-card {
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .product-card img {
+        height: 230px;     /* kecilkan gambar */
+        object-fit: contain;
+        padding: 10px;
+    }
+
+    .product-card .card-body {
+        padding: 10px;
+    }
+
+    .product-card h6 {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    .product-card p {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    .btn-sm {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+
+    /* ====== CARD PRODUK RAPI & SERAGAM ====== */
+.product-card {
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: 0.2s;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-card img {
+    height: 220px;
+    object-fit: contain;
+    padding: 10px;
+    background: #fff;
+}
+
+/* Nama + harga */
+.product-card h6 {
+    font-size: 15px;
+    font-weight: 600;
+    min-height: 40px; /* agar tinggi seragam */
+}
+
+.product-card p {
+    margin-bottom: 5px;
+    font-size: 15px;
+}
+
+/* Dot Warna */
+.color-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1px solid #ccc;
+}
+
+/* ====== SIDEBAR BRAND MENARIK ====== */
+.brand-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.brand-item {
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    color: #333;
+    transition: 0.2s;
+}
+
+.brand-item:hover {
+    background: #000;
+    color: #fff;
+}
+
+.brand-active {
+    background: #000;
+    color: white !important;
+    border: 1px solid #000;
+}
+
+.footer {
+  background: #111827;
+  color: #e5e7eb;
+}
+
+.footer h5,
+.footer h6 {
+  color: #ffffff;
+}
+
+.footer-link {
+  color: #9ca3af;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.footer-link:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  background: #0f172a;
+  color: #9ca3af;
+}
+
+.logo-batara {
+  color: #000; /* hitam */
+}
+
+.logo-media {
+  color: #6c757d; /* abu terang agar kontras */
+  font-weight: 600;
+
+
+}
+
+.sidebar {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+
+.sidebar a {
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.sidebar a:hover {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+.form-control-sm,
+.form-select-sm {
+  font-size: 13px;
+}
+
+.badge-custom {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.badge-rekomendasi {
+  background-color: #facc15;
+  color: #000;
+}
+
+.badge-rating {
+  background-color: #3b82f6;
+  color: #fff;
+}
+
+.badge-terlaris {
+  background-color: #16a34a;
+  color: #fff;
+}
+
+.badge-terbaru {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+
+
+
+  </style>
+
+</head>
+<body>
+
+  <!-- Flash Message -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="container mt-3">
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg bg-light shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold fs-4 d-flex align-items-center" href="/">
+  <span class="logo-batara">Batara</span>
+  <span class="logo-media ms-1">Media</span>
+</a>
+
+
+    <form class="d-flex ms-auto" role="search" style="max-width: 300px;" method="GET" action="{{ url_for('home') }}">
+      <input class="form-control me-2" type="search" name="q" placeholder="Cari Produk..." value="{{ request.args.get('q', '') }}">
+      <button class="btn btn-outline-dark"><i class="bi bi-search"></i></button>
+      
+    </form>
+    {% if user_baru %}
+<button 
+class="btn btn-outline-dark ms-2"
+data-bs-toggle="modal"
+data-bs-target="#modalKriteria">
+<i class="bi bi-sliders"></i> Cari Kriteria
+</button>
+{% endif %}
+
+  <ul class="navbar-nav ms-3 align-items-center gap-3">
+
+  <!-- Wishlist -->
+  <li class="nav-item">
+    <a href="{{ url_for('wishlist') }}" class="nav-link position-relative">
+      <i class="bi bi-heart fs-5"></i>
+      {% if wishlist_count > 0 %}
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+        {{ wishlist_count }}
+      </span>
+      {% endif %}
+    </a>
+  </li>
+
+  <!-- Profil -->
+  {% if session.get('user_id') %}
+  <li class="nav-item">
+    <a href="{{ url_for('profil_index') }}" class="nav-link">
+      <i class="bi bi-person-circle fs-5"></i>
+    </a>
+  </li>
+  {% else %}
+  <li class="nav-item">
+    <a href="{{ url_for('login_user') }}" class="nav-link">LOGIN</a>
+  </li>
+  <li class="nav-item">
+    <a href="{{ url_for('register') }}" class="nav-link">DAFTAR</a>
+  </li>
+  {% endif %}
+
+  <!-- Cart -->
+  <li class="nav-item">
+    <a href="{{ url_for('cart') }}" class="nav-link position-relative">
+      <i class="bi bi-cart fs-5"></i>
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+        {{ cart_count or 0 }}
+      </span>
+    </a>
+  </li>
+
+</ul>
+  </div>
+</nav>
+
+
+<!-- Sidebar + Konten -->
+<div class="container-fluid mt-4">
+  <div class="row">
+
+    <!-- Sidebar -->
+    <div class="col-md-2">
+      <div class="sidebar p-3">
+
+  <!-- JUDUL -->
+  <h5 class="fw-bold mb-3 d-flex align-items-center">
+    <i class="bi bi-funnel me-2"></i> Filter
+  </h5>
+
+  <form method="GET" action="{{ url_for('home') }}">
+
+    <!-- BRAND -->
+    <div class="mb-3">
+      <label class="fw-semibold mb-2">Brand</label>
+
+      {% for b in brands %}
+        <a href="{{ url_for('home', brand=b.id_brand) }}"
+           class="d-block px-3 py-2 mb-1 rounded
+           {% if merek_aktif == b.id_brand|string %}bg-dark text-white{% else %}bg-light text-dark{% endif %}">
+          {{ b.nama_brand }}
+        </a>
+      {% endfor %}
+    </div>
+
+    <!-- HARGA -->
+    <div class="mb-3">
+      <label class="fw-semibold">Harga</label>
+      <div class="d-flex gap-2 mt-1">
+        <input type="number" name="harga_min"
+               class="form-control form-control-sm"
+               placeholder="Rp Min"
+               value="{{ harga_min or '' }}">
+        <input type="number" name="harga_max"
+               class="form-control form-control-sm"
+               placeholder="Rp Maks"
+               value="{{ harga_max or '' }}">
+      </div>
+    </div>
+
+   <!-- RAM & PENYIMPANAN -->
+<div class="mb-3">
+  <label class="fw-semibold">RAM & Penyimpanan</label>
+  <select name="varian" class="form-select form-select-sm">
+    <option value="">Semua</option>
+
+    {% for v in daftar_varian %}
+      <option value="{{ v.nama_varian }}"
+        {% if request.args.get('varian') == v.nama_varian %}selected{% endif %}>
+        {{ v.nama_varian }}
+      </option>
+    {% endfor %}
+
+  </select>
+</div>
+
+
+
+    <!-- RATING -->
+    <div class="mb-4">
+      <label class="fw-semibold">Rating</label>
+      <select name="rating" class="form-select form-select-sm">
+        <option value="">Semua</option>
+        <option value="5" {% if rating=='5' %}selected{% endif %}>⭐⭐⭐⭐⭐ ke atas</option>
+        <option value="4" {% if rating=='4' %}selected{% endif %}>⭐⭐⭐⭐ ke atas</option>
+        <option value="3" {% if rating=='3' %}selected{% endif %}>⭐⭐⭐ ke atas</option>
+      </select>
+    </div>
+
+    <!-- BAWA PARAMETER LAIN -->
+    {% if keyword %}
+      <input type="hidden" name="q" value="{{ keyword }}">
+    {% endif %}
+    {% if merek_aktif %}
+      <input type="hidden" name="brand" value="{{ merek_aktif }}">
+    {% endif %}
+    {% if ram %}
+  <input type="hidden" name="ram" value="{{ ram }}">
+{% endif %}
+
+{% if rating %}
+  <input type="hidden" name="rating" value="{{ rating }}">
+{% endif %}
+
+
+    <!-- BUTTON -->
+    <button class="btn btn-dark w-100 mb-2">
+      Cari
+    </button>
+
+    <a href="{{ url_for('home') }}" class="btn btn-outline-secondary w-100">
+      Reset
+    </a>
+
+  </form>
+</div>
+
+    </div>
+
+    <!-- Konten Halaman -->
+    <div class="col-md-10">
+
+      {% block content %}
+      {% endblock %}
+
+    </div>
+
+  </div>
+</div>
+
+<footer class="footer mt-5">
+  <div class="container py-5">
+    <div class="row gy-4">
+
+      <!-- LOGO / IDENTITAS -->
+      <div class="col-md-4">
+        <h5 class="fw-bold mb-3">Batara Gadget Store</h5>
+        <p class="text-muted small">
+          Sistem Informasi Penjualan Smartphone dengan
+          Rekomendasi Produk Menggunakan
+          <strong>Item-Based Collaborative Filtering (IBCF)</strong>.
+        </p>
+      </div>
+
+      <!-- MENU -->
+      <div class="col-md-2">
+        <h6 class="fw-semibold mb-3">Menu</h6>
+        <ul class="list-unstyled small">
+          <li><a href="/" class="footer-link">Beranda</a></li>
+          <li><a href="/produk" class="footer-link">Produk</a></li>
+          <li><a href="/cart" class="footer-link">Keranjang</a></li>
+          <li><a href="/profil" class="footer-link">Akun Saya</a></li>
+        </ul>
+      </div>
+
+      <!-- LAYANAN -->
+      <div class="col-md-3">
+        <h6 class="fw-semibold mb-3">Layanan</h6>
+        <ul class="list-unstyled small">
+          <li>Rekomendasi Produk Otomatis</li>
+          <li>Pembelian Online</li>
+          <li>Manajemen Pesanan</li>
+          <li>Laporan Penjualan</li>
+        </ul>
+      </div>
+
+      <!-- KONTAK -->
+      <div class="col-md-3">
+        <h6 class="fw-semibold mb-3">Kontak</h6>
+        <p class="small mb-1">
+          📍 Rantepao, Toraja Utara
+        </p>
+        <p class="small mb-1">
+          📞 0812-3456-7890
+        </p>
+        <p class="small">
+          ✉️ bataragadget@email.com
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- COPYRIGHT -->
+  <div class="footer-bottom text-center py-3">
+    <small>
+      ©  2026
+ Batara Gadget Store |
+      Sistem Informasi Penjualan Smartphone
+    </small>
+  </div>
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Modal Profil User -->
+<div class="modal fade" id="modalProfil" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Profil Pengguna</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <p><strong>Nama:</strong> <span id="pNama"></span></p>
+        <p><strong>Email:</strong> <span id="pEmail"></span></p>
+        <p><strong>Region:</strong> <span id="pRegion"></span></p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalKriteria" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+<form method="GET" action="{{ url_for('home') }}">
+
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title">🔎 Cari Smartphone Berdasarkan Kriteria</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="mb-3">
+          <label class="fw-semibold">Chipset</label>
+          <select name="chipset" class="form-select">
+            <option value="">Semua</option>
+            <option value="Snapdragon">Snapdragon</option>
+            <option value="Dimensity">Dimensity</option>
+            <option value="Exynos">Exynos</option>
+            <option value="Helio">Helio</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="fw-semibold">Tipe Layar</label>
+          <select name="layar" class="form-select">
+            <option value="">Semua</option>
+            <option value="AMOLED">AMOLED</option>
+            <option value="OLED">OLED</option>
+            <option value="PLS">PLS</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="fw-semibold">Resolusi Kamera</label>
+          <select name="kamera" class="form-select">
+            <option value="">Semua</option>
+            <option value="50">50 MP</option>
+            <option value="64">64 MP</option>
+            
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="fw-semibold">Baterai</label>
+          <select name="baterai" class="form-select">
+            <option value="">Semua</option>
+            <option value="5000">5000 mAh</option>
+            <option value="6000">6000 mAh</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-dark w-100">
+          🔍 Cari Smartphone
+        </button>
+      </div>
+
+</form>
+
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>
+
+<script>
+function openProfile() {
+    fetch('/profil/data')
+        .then(res => res.json())
+        .then(user => {
+            document.getElementById('pNama').textContent = user.nama;
+            document.getElementById('pEmail').textContent = user.email;
+            document.getElementById('pRegion').textContent = user.region;
+
+            let modal = new bootstrap.Modal(document.getElementById('modalProfil'));
+            modal.show();
+        });
+}
+</script>
+

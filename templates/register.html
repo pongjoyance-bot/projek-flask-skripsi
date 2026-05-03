@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+    <div class="card shadow-lg border-0 p-4" style="width: 460px; border-radius: 16px;">
+     <h2 class="text-center fw-bold mb-0">Batara Media</h2>
+<p class="text-center text-secondary mb-4">Gadget Store</p>
+
+
+
+        {% if error %}
+        <div class="alert alert-danger text-center">{{ error }}</div>
+        {% endif %}
+
+        <form action="{{ url_for('register') }}" method="POST">
+
+            <!-- Nama -->
+            <div class="mb-3">
+                <label class="form-label">Nama Lengkap</label>
+                <input name="nama" class="form-control" placeholder="Masukkan nama lengkap" required>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input name="email" type="email" class="form-control" placeholder="contoh@email.com" required>
+            </div>
+
+            <!-- Tanggal Lahir -->
+            <div class="mb-3">
+                <label class="form-label">Tanggal Lahir</label>
+                <input name="tanggal_lahir" type="date" class="form-control" required>
+            </div>
+
+            <!-- Nomor HP -->
+            <div class="mb-3">
+                <label class="form-label">Nomor HP</label>
+                <input name="no_hp" type="tel" class="form-control" placeholder="08xxxxxxxxxx" required>
+            </div>
+
+           <div class="mb-3">
+    <label class="form-label d-block">Jenis Kelamin</label>
+
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="jenis_kelamin" id="jk_l" value="Laki-laki" required>
+        <label class="form-check-label" for="jk_l">Laki-laki</label>
+    </div>
+
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="jenis_kelamin" id="jk_p" value="Perempuan">
+        <label class="form-check-label" for="jk_p">Perempuan</label>
+    </div>
+</div>
+
+
+            <!-- Region -->
+            <div class="mb-3">
+                <label class="form-label">Region / Daerah</label>
+                <select name="region" class="form-select" required>
+                    <option value="">-- Pilih Region --</option>
+                    <option>Sumatra</option>
+                    <option>Jawa</option>
+                    <option>Kalimantan</option>
+                    <option>Sulawesi</option>
+                    <option>Nusa Tenggara</option>
+                    <option>Papua</option>
+                </select>
+            </div>
+    
+<hr>
+<h6 class="fw-bold mt-3">Informasi Alamat Pengiriman</h6>
+
+<div class="mb-2">
+    <label class="form-label">Provinsi</label>
+    <input name="provinsi" class="form-control" required>
+</div>
+
+<div class="mb-2">
+    <label class="form-label">Kabupaten / Kota</label>
+    <input name="kabupaten" class="form-control" required>
+</div>
+
+<div class="mb-2">
+    <label class="form-label">Kecamatan</label>
+    <input name="kecamatan" class="form-control" required>
+</div>
+
+<div class="mb-2">
+    <label class="form-label">Detail Alamat</label>
+    <textarea name="detail_alamat" class="form-control" required></textarea>
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Kode Pos</label>
+    <input name="kode_pos" class="form-control" required>
+</div>
+
+           <!-- Password -->
+<div class="mb-3">
+    <label class="form-label">Password</label>
+    <div class="input-group">
+        <input type="password" name="password" id="password" class="form-control" required>
+        <span class="input-group-text" onclick="togglePassword('password', this)" style="cursor:pointer;">
+            👁️
+        </span>
+    </div>
+</div>
+
+<!-- Confirm Password -->
+<div class="mb-3">
+    <label class="form-label">Konfirmasi Password</label>
+    <div class="input-group">
+        <input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
+        <span class="input-group-text" onclick="togglePassword('confirm_password', this)" style="cursor:pointer;">
+            👁️
+        </span>
+    </div>
+</div>
+
+
+            <button class="btn btn-dark w-100 py-2 mt-2">
+                Daftar Sekarang
+            </button>
+
+            <p class="text-center mt-3 mb-0">
+                Sudah punya akun?
+                <a href="{{ url_for('login_user') }}" class="fw-semibold">Login</a>
+            </p>
+
+        </form>
+    </div>
+</div>
+
+<script>
+function togglePassword(inputId, el) {
+    const input = document.getElementById(inputId);
+    if (input.type === "password") {
+        input.type = "text";
+        el.textContent = "🙈";
+    } else {
+        input.type = "password";
+        el.textContent = "👁️";
+    }
+}
+</script>
+
+
+{% endblock %}

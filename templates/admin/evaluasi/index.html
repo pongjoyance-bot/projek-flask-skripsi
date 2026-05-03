@@ -1,0 +1,63 @@
+{% extends "admin/admin_base.html" %}
+{% block content %}
+
+<div class="card shadow-sm">
+  <div class="card-header bg-light d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Evaluasi Sistem Rekomendasi</h5>
+  </div>
+
+  <div class="card-body">
+
+    <div class="table-responsive">
+      <table id="tabelEvaluasi" class="table table-bordered table-striped align-middle">
+        <thead class="table-light">
+          <tr>
+            <th width="60">No</th>
+            <th>ID User</th>
+            <th>Nama</th>
+            <th width="120" class="text-center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ u.id_user }}</td>
+            <td>{{ u.nama }}</td>
+            <td class="text-center">
+              <a href="{{ url_for('detail_evaluasi', user_id=u.id_user) }}"
+                 class="btn btn-primary btn-sm">
+                 <i class="bi bi-bar-chart"></i>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- Inisialisasi DataTables -->
+<script>
+  $(document).ready(function() {
+    $('#tabelEvaluasi').DataTable({
+      pageLength: 10,
+      lengthMenu: [5, 10, 25, 50],
+      ordering: true,
+      responsive: true,
+      language: {
+        search: "Cari:",
+        lengthMenu: "Tampilkan _MENU_ data",
+        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+        paginate: {
+          previous: "Sebelumnya",
+          next: "Berikutnya"
+        }
+      }
+    });
+  });
+</script>
+
+{% endblock %}

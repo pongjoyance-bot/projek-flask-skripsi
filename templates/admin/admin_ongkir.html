@@ -1,0 +1,180 @@
+{% extends "admin/admin_base.html" %}
+{% block content %}
+
+<div class="card shadow-sm">
+  <div class="card-header bg-light d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Kelola Ongkir</h5>
+   <button class="btn btn-primary btn-sm"
+        data-bs-toggle="modal"
+        data-bs-target="#modalTambah">
+    Tambah Ongkir
+</button>
+
+  </div>
+
+  <div class="card-body">
+
+    <div class="table-responsive">
+      <table id="tabelOngkir" class="table table-bordered table-striped align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>No</th>
+            <th>Provinsi</th>
+            <th>Kabupaten</th>
+            <th>Kecamatan</th>
+            <th>Biaya</th>
+            <th width="120">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for o in data_ongkir %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ o.provinsi }}</td>
+            <td>{{ o.kabupaten }}</td>
+            <td>{{ o.kecamatan }}</td>
+            <td>{{ o.biaya | rupiah }}</td>
+            <td class="text-center">
+
+             <button class="btn btn-warning btn-sm"
+        data-bs-toggle="modal"
+        data-bs-target="#modalEdit{{ o.id_ongkir }}">
+    <i class="bi bi-pencil"></i>
+</button>
+
+
+
+
+
+              <a href="{{ url_for('hapus_ongkir', id=o.id_ongkir) }}"
+                 class="btn btn-danger btn-sm"
+                 onclick="return confirm('Yakin ingin menghapus ongkir ini?')">
+                <i class="bi bi-trash"></i>
+              </a>
+
+              <div class="modal fade" id="modalEdit{{ o.id_ongkir }}" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <form method="POST"
+            action="{{ url_for('edit_ongkir', id=o.id_ongkir) }}">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Ongkir</h5>
+          <button type="button" class="btn-close"
+                  data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <input type="text" name="provinsi"
+                 class="form-control mb-2"
+                 value="{{ o.provinsi }}" required>
+
+          <input type="text" name="kabupaten"
+                 class="form-control mb-2"
+                 value="{{ o.kabupaten }}" required>
+
+          <input type="text" name="kecamatan"
+                 class="form-control mb-2"
+                 value="{{ o.kecamatan }}" required>
+
+          <input type="number" name="biaya"
+                 class="form-control"
+                 value="{{ o.biaya }}" required>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal">Batal</button>
+          <button type="submit"
+                  class="btn btn-warning">Update</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal fade" id="modalTambah" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <form method="POST" action="{{ url_for('tambah_ongkir') }}">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Tambah Ongkir</h5>
+          <button type="button" class="btn-close"
+                  data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <input type="text" name="provinsi"
+                 class="form-control mb-2"
+                 placeholder="Provinsi" required>
+
+          <input type="text" name="kabupaten"
+                 class="form-control mb-2"
+                 placeholder="Kabupaten" required>
+
+          <input type="text" name="kecamatan"
+                 class="form-control mb-2"
+                 placeholder="Kecamatan" required>
+
+          <input type="number" name="biaya"
+                 class="form-control"
+                 placeholder="Biaya Ongkir" required>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal">Batal</button>
+          <button type="submit"
+                  class="btn btn-primary">Simpan</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- Inisialisasi DataTables -->
+<script>
+  $(document).ready(function() {
+    $('#tabelOngkir').DataTable({
+      pageLength: 10,
+      lengthMenu: [5, 10, 25, 50],
+      ordering: true,
+      responsive: true,
+      language: {
+        search: "Cari:",
+        lengthMenu: "Tampilkan _MENU_ data",
+        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+        paginate: {
+          previous: "Sebelumnya",
+          next: "Berikutnya"
+        }
+      }
+    });
+  });
+</script>
+
+{% endblock %}

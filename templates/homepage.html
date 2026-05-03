@@ -1,0 +1,269 @@
+{% extends "layout.html" %}
+{% block title %}Beranda{% endblock %}
+
+{% block content %}
+
+<!-- ========= SMARTPHONE TERPOPULER ========= -->
+<h4 class="mb-3">📱 Smartphone Terpopuler</h4>
+
+<div class="row">
+<form method="GET" class="d-flex gap-2 mb-3">
+
+  <select name="sort" class="form-select">
+    <option value="terbaru" {{ 'selected' if sort=='terbaru' }}>Terbaru</option>
+    <option value="harga_asc" {{ 'selected' if sort=='harga_asc' }}>Harga Termurah</option>
+    <option value="harga_desc" {{ 'selected' if sort=='harga_desc' }}>Harga Termahal</option>
+    <option value="rating" {{ 'selected' if sort=='rating' }}>Rating Tertinggi</option>
+    <option value="terlaris" {{ 'selected' if sort=='terlaris' }}>Terlaris</option>
+  </select>
+
+  
+
+  <!-- Bawa filter agar tidak hilang -->
+  {% for key, value in request.args.items() %}
+    {% if key != 'sort' %}
+      <input type="hidden" name="{{ key }}" value="{{ value }}">
+    {% endif %}
+  {% endfor %}
+
+  <button class="btn btn-dark">Sort</button>
+</form>
+{% if not smartphones_populer %}
+<div class="alert alert-warning text-center">
+    Produk tidak ditemukan
+</div>
+{% endif %}
+
+    {% for produk in smartphones_populer %}
+    <div class="col-md-4 mb-4">
+        <div class="card product-card shadow-sm text-center">
+            {% if produk.is_favorit %}
+  <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2">
+    ⭐ Favorit
+  </span>
+{% elif produk.is_rating_tinggi %}
+  <span class="badge bg-success position-absolute top-0 end-0 m-2">
+    👍 Rating Tinggi
+  </span>
+{% endif %}
+
+<form method="POST"
+      action="{{ url_for('toggle_wishlist', id_produk=produk.id_produk) }}"
+      class="position-absolute top-0 start-0 m-2">
+
+  <button class="btn btn-sm rounded-circle
+      {% if produk.is_wishlist %}btn-danger{% else %}btn-outline-danger{% endif %}">
+    <i class="bi {% if produk.is_wishlist %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+  </button>
+
+</form>
+
+
+
+
+            <img src="{{ url_for('static', filename=produk.gambar.replace('static/', '')) }}" 
+                 alt="{{ produk.nama_produk }}">
+
+           <div class="card-body">
+
+    <!-- BADGE -->
+    <div class="d-flex justify-content-center gap-1 mb-1">
+         {% if produk.is_terbaru %}
+          <span class="badge-custom badge-terbaru">🆕 Terbaru</span>
+        {% endif %}
+
+        {% if produk.is_terlaris %}
+          <span class="badge-custom badge-terlaris">📈 Terlaris</span>
+        {% endif %}
+
+        {% if produk.avg_rating and produk.avg_rating >= 4 %}
+          <span class="badge-custom badge-rating">⭐ Rating Tinggi</span>
+        {% endif %}
+
+    </div>
+
+    <h6 class="mb-1">{{ produk.nama_produk }}</h6>
+
+<p class="small text-muted">
+[{{ produk.chipset }} •
+{{ produk.layar }} •
+{{ produk.kamera }} •
+{{ produk.baterai }} mAh]
+</p>
+
+<p class="small text-muted">
+[{% for v in produk.varian_spec %}
+{{ v.nama_varian }}{% if not loop.last %}, {% endif %}]
+{% endfor %}
+</p>
+
+
+    {% if produk.avg_rating %}
+  <div class="text-warning small mb-1">
+    {% for i in range(1, 6) %}
+      {% if i <= produk.avg_rating %}
+        ★
+      {% else %}
+        ☆
+      {% endif %}
+    {% endfor %}
+    <span class="text-muted">
+      ({{ produk.avg_rating }})
+    </span>
+  </div>
+{% else %}
+  <div class="text-muted small mb-1">Belum ada rating</div>
+{% endif %}
+
+
+    <p><strong>
+      Rp {{ "{:,.0f}".format(produk.harga_terendah).replace(",", ".") }}
+    </strong></p>
+
+
+<script>
+  document.querySelectorAll('.color-dot').forEach(dot => {
+    dot.style.backgroundColor = dot.dataset.color;
+  });
+</script>
+
+
+                <!-- Tombol -->
+                <div class="d-flex justify-content-center gap-2 mt-3">
+                    <a href="{{ url_for('detail_produk', id_produk=produk.id_produk) }}" 
+   class="btn btn-dark btn-sm">
+   Pilih Varian
+</a>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+
+
+
+<!-- ========= REKOMENDASI UNTUK ANDA ========= -->
+<h4 class="mt-5 mb-3">💡 Rekomendasi Untuk Anda</h4>
+<div class="row">
+
+    {% for produk in rekomendasi_user %}
+    <div class="col-md-4 mb-4">
+       <div class="card product-card shadow-sm text-center">
+
+{% if produk.similarity_percent %}
+<span 
+class="badge bg-dark position-absolute bottom-0 end-0 m-2"
+title="Produk memiliki kemiripan dengan produk yang pernah Anda beli">
+{{ produk.similarity_percent }}%
+</span>
+{% endif %}
+        
+{% if produk.is_terbaru %}
+  <span class="badge bg-primary position-absolute top-0 end-0 m-2">
+    🆕 Produk Terbaru
+  </span>
+        {% elif produk.is_favorit %}
+  <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2">
+    ⭐ Favorit
+  </span>
+{% elif produk.is_rating_tinggi %}
+  <span class="badge bg-success position-absolute top-0 end-0 m-2">
+    👍 Rating Tinggi
+  </span>
+{% endif %}
+
+<form method="POST"
+      action="{{ url_for('toggle_wishlist', id_produk=produk.id_produk) }}"
+      class="position-absolute top-0 start-0 m-2">
+
+  <button class="btn btn-sm rounded-circle
+      {% if produk.is_wishlist %}btn-danger{% else %}btn-outline-danger{% endif %}">
+    <i class="bi {% if produk.is_wishlist %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+  </button>
+
+</form>
+
+            <img src="{{ url_for('static', filename=produk.gambar.replace('static/', '')) }}" 
+                 class="card-img-top"
+                 alt="{{ produk.nama_produk }}">
+
+            <div class="card-body">
+
+    <!-- BADGE -->
+    <div class="d-flex justify-content-center gap-1 mb-1">
+        <span class="badge-custom badge-rekomendasi">
+            🔥 Rekomendasi
+        </span>
+    </div>
+
+  <h6 class="mb-1">{{ produk.nama_produk }}</h6>
+
+<p class="small text-muted">
+[{{ produk.chipset }} •
+{{ produk.layar }} •
+{{ produk.kamera }} •
+{{ produk.baterai }} mAh]
+</p>
+
+<p class="small text-muted">
+[{% for v in produk.varian_spec %}
+{{ v.nama_varian }}{% if not loop.last %}, {% endif %}]
+{% endfor %}
+</p>
+
+
+     {% if produk.avg_rating %}
+  <div class="text-warning small mb-1">
+    {% for i in range(1, 6) %}
+      {% if i <= produk.avg_rating %}
+        ★
+      {% else %}
+        ☆
+      {% endif %}
+    {% endfor %}
+    <span class="text-muted">
+      ({{ produk.avg_rating }})
+    </span>
+  </div>
+{% else %}
+  <div class="text-muted small mb-1">Belum ada rating</div>
+{% endif %}
+
+
+               <p><strong>
+  Rp {{ "{:,.0f}".format(produk.harga_terendah or 0).replace(",", ".") }}
+
+</strong></p>
+
+
+
+
+                <div class="d-flex justify-content-center gap-2">
+                    <a href="{{ url_for('detail_produk', id_produk=produk.id_produk) }}" 
+   class="btn btn-dark btn-sm">
+   Pilih Varian
+</a>
+
+                   
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+<script>
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+</script>
+
+{% endblock %}

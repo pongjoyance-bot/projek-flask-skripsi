@@ -1,0 +1,268 @@
+{% extends "admin/admin_base.html" %}
+{% block content %}
+
+<h4 class="mb-4">Detail Pesanan {{ order.id_order }}</h4>
+
+<div class="row">
+
+  <!-- ================= KIRI ================= -->
+  <div class="col-md-8">
+
+    <!-- ===== PRODUK ===== -->
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="mb-3">Produk</h5>
+
+        <ul class="list-group">
+          {% for it in items %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <strong>{{ it.nama_produk }}</strong><br>
+              Jumlah Item: {{ it.jumlah }} × {{ it.harga | rupiah }}
+            </div>
+            <div>
+              <strong>{{ it.subtotal | rupiah }}</strong>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- ===== INFORMASI PENGIRIMAN ===== -->
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="mb-3">Informasi Pengiriman</h5>
+
+        <p>
+          <strong>Alamat Lengkap:</strong><br>
+          {{ order.alamat_lengkap }}
+        </p>
+
+        <p>
+          {{ order.kota }}, {{ order.provinsi }}, {{ order.negara }}
+        </p>
+
+        {% if order.alamat_map %}
+          <hr>
+          <p class="mb-1"><strong>Lokasi dari Peta:</strong></p>
+          <p class="small text-muted">{{ order.alamat_map }}</p>
+
+          {% if order.lat and order.lng %}
+            <a href="https://www.google.com/maps?q={{ order.lat }},{{ order.lng }}"
+               target="_blank"
+               class="btn btn-sm btn-outline-primary mb-2">
+              📍 Buka di Google Maps
+            </a>
+
+            <div id="adminMap" style="height:300px;" class="rounded border"></div>
+          {% endif %}
+        {% else %}
+          <p class="text-muted small">Lokasi peta tidak dipilih.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- ===== UBAH STATUS ===== -->
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5>Ubah Status Pesanan</h5>
+
+        <form method="POST"
+              action="{{ url_for('admin_update_order_status', id_order=order.id_order) }}">
+
+          <div class="mb-2">
+            <select name="status" class="form-select" required>
+              {% for s in ['menunggu konfirmasi','diproses/packing','dikirim','selesai','dibatalkan'] %}
+              <option value="{{ s }}"
+                {% if order.status_pesanan == s %}selected{% endif %}>
+                {{ s|capitalize }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+
+
+          <button class="btn btn-success">Simpan Status</button>
+        </form>
+
+        <form method="POST"
+              action="{{ url_for('admin_cancel_order', id_order=order.id_order) }}"
+              class="mt-3"
+              onsubmit="return confirm('Batalkan pesanan ini?');">
+          <button class="btn btn-danger">Batalkan Pesanan</button>
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ================= KANAN ================= -->
+  <div class="col-md-4">
+
+    <!-- ===== RINGKASAN ===== -->
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5>Ringkasan</h5>
+
+        <h5>Ringkasan Pembayaran</h5>
+
+<ul class="list-group mb-3">
+
+  <li class="list-group-item d-flex justify-content-between">
+    <span>Subtotal Produk</span>
+    <span>{{ subtotal | rupiah }}</span>
+  </li>
+
+  <li class="list-group-item d-flex justify-content-between">
+    <span>Biaya Admin</span>
+    <span>{{ admin | rupiah }}</span>
+  </li>
+
+  <li class="list-group-item d-flex justify-content-between">
+    <span>Ongkos Kirim</span>
+    <span>{{ order.ongkir | rupiah }}</span>
+  </li>
+
+  <li class="list-group-item d-flex justify-content-between fw-bold bg-light">
+    <span>Total Pembayaran</span>
+    <strong class="text-primary">
+      {{ order.total_harga | rupiah }}
+    </strong>
+  </li>
+
+</ul>
+
+
+       <p>
+  Metode Pembayaran:
+  <strong>{{ order.metode_pembayaran or '-' }}</strong>
+</p>
+
+{% if order.metode_pembayaran == 'TRANSFER' and order.bukti_pembayaran %}
+  <div class="mb-3">
+    <a href="{{ url_for('static', filename='bukti/' + order.bukti_pembayaran) }}"
+       target="_blank"
+       class="btn btn-outline-primary btn-sm w-100">
+       👁️ Lihat Bukti Transfer
+    </a>
+  </div>
+{% endif %}
+
+
+        <p>
+          Status:
+          <span class="badge bg-secondary">{{ order.status_pesanan }}</span>
+        </p>
+
+        {% if order.bukti_transfer %}
+        <div class="mt-3">
+          <strong>Bukti Transfer:</strong><br>
+          <a href="{{ url_for('static', filename='bukti/' + order.bukti_transfer) }}"
+             target="_blank">
+            Lihat Bukti Pembayaran
+          </a>
+        </div>
+        {% endif %}
+
+        
+      </div>
+      
+    </div>
+{% if order.status_pembayaran == 'Menunggu Verifikasi' %}
+<hr>
+
+<h6>Verifikasi Pembayaran</h6>
+
+<form method="POST"
+      action="{{ url_for('admin_verify_payment', id_order=order.id_order) }}"
+      class="mb-2">
+
+  <button name="aksi"
+          value="terima"
+          class="btn btn-success btn-sm w-100 mb-2">
+    ✔ Terima Pembayaran
+  </button>
+
+  <button name="aksi"
+          value="tolak"
+          class="btn btn-danger btn-sm w-100"
+          onclick="return confirm('Tolak pembayaran ini?')">
+    ✖ Tolak Pembayaran
+  </button>
+
+</form>
+{% endif %}
+
+<!-- TOMBOL CETAK NOTA -->
+<div class="mb-3">
+  <a href="{{ url_for('admin_order_invoice', id_order=order.id_order) }}"
+     target="_blank"
+     class="btn btn-primary btn-sm">
+    🖨️ Cetak Nota
+  </a>
+</div>
+
+
+    <!-- ===== RIWAYAT STATUS ===== -->
+    <div class="card">
+      <div class="card-body">
+        <h6>Riwayat Status</h6>
+
+        <ul class="list-group">
+          {% for l in logs %}
+          <li class="list-group-item">
+            <small>{{ l.created_at }}</small><br>
+            Status: <strong>{{ l.action }}</strong>
+            {% if l.note %}
+              <div><em>{{ l.note }}</em></div>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+<p>
+  Status Pembayaran:
+  {% if order.status_pembayaran == 'Terverifikasi' %}
+    <span class="badge bg-success">Terverifikasi</span>
+  {% elif order.status_pembayaran == 'Menunggu Verifikasi' %}
+    <span class="badge bg-warning text-dark">Menunggu Verifikasi</span>
+  {% elif order.status_pembayaran == 'Ditolak' %}
+    <span class="badge bg-danger">Ditolak</span>
+  {% else %}
+    <span class="badge bg-secondary">{{ order.status_pembayaran }}</span>
+  {% endif %}
+</p>
+
+  </div>
+
+</div>
+
+<!-- ===== MAP SCRIPT ===== -->
+{% if order.lat and order.lng %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+  
+ const lat = {{ order.lat or -5.14 }};
+const lng = {{ order.lng or 119.43 }};
+
+const map = L.map('adminMap').setView([lat, lng], 15);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap'
+}).addTo(map);
+
+if({{ 'true' if order.lat and order.lng else 'false' }}){
+  L.marker([lat,lng])
+    .addTo(map)
+    .bindPopup("Lokasi Pengiriman")
+    .openPopup();
+}
+</script>
+{% endif %}
+
+{% endblock %}

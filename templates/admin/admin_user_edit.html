@@ -1,0 +1,67 @@
+{% extends "admin/admin_base.html" %}
+{% block content %}
+
+<div class="container mt-4" style="max-width: 600px;">
+    <h3 class="mb-3">Edit User</h3>
+
+    <form method="POST">
+
+        <div class="mb-3">
+            <label>Nama</label>
+            <input type="text" name="nama"
+                   value="{{ user.nama }}"
+                   class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input type="email" name="email"
+                   value="{{ user.email }}"
+                   class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>No HP</label>
+            <input type="text" name="no_hp"
+                   value="{{ user.no_hp or '' }}"
+                   class="form-control"
+                   placeholder="08xxxxxxxxxx">
+        </div>
+
+        <div class="mb-3">
+            <label>Jenis Kelamin</label>
+            <select name="jenis_kelamin" class="form-select">
+                <option value="">-- Pilih --</option>
+                <option value="Laki-laki"
+                    {{ 'selected' if user.jenis_kelamin == 'Laki-laki' }}>
+                    Laki-laki
+                </option>
+                <option value="Perempuan"
+                    {{ 'selected' if user.jenis_kelamin == 'Perempuan' }}>
+                    Perempuan
+                </option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Tanggal Lahir</label>
+            <input type="date" name="tanggal_lahir"
+                   value="{{ user.tanggal_lahir }}"
+                   class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label>Region</label>
+            <input type="text" name="region"
+                   value="{{ user.region or '' }}"
+                   class="form-control">
+        </div>
+
+        <button class="btn btn-primary">💾 Simpan</button>
+        <a href="{{ url_for('admin_user') }}" class="btn btn-secondary">
+            Kembali
+        </a>
+    </form>
+</div>
+
+{% endblock %}

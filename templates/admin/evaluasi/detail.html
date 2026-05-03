@@ -1,0 +1,89 @@
+{% extends "admin/admin_base.html" %}
+{% block content %}
+
+<div class="card shadow-sm">
+  <div class="card-header bg-light d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">
+      Detail Evaluasi - {{ user.nama }} (: {{ user_id }})
+    </h5>
+    <a href="{{ url_for('admin_evaluasi') }}" class="btn btn-secondary btn-sm">
+      Kembali
+    </a>
+  </div>
+
+  <div class="card-body">
+
+    <!-- ===================== -->
+    <!-- TABEL REKOMENDASI -->
+    <!-- ===================== -->
+    <h6 class="mb-3">Daftar Rekomendasi</h6>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-sm align-middle">
+        <thead class="table-light text-center">
+          <tr>
+            <th style="width:60px;">No</th>
+            <th>Produk yang Direkomendasikan</th>
+            <th style="width:150px;">Similarity</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in rekomendasi %}
+          <tr>
+            <td class="text-center">{{ loop.index }}</td>
+            <td>{{ item.nama_produk }}</td>
+            <td class="text-center">
+              {{ "%.4f"|format(item.similarity) if item.similarity else "-" }}
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="3" class="text-center text-muted">
+              Tidak ada rekomendasi tersedia
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <hr>
+
+    <!-- ===================== -->
+    <!-- DETAIL EVALUASI KECIL -->
+    <!-- ===================== -->
+    <div class="row mt-3">
+
+      <div class="col-md-4">
+        <div class="border rounded p-2 text-center small">
+          <strong>MAE</strong><br>
+          {{ "%.4f"|format(mae) if mae else 0 }}
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="border rounded p-2 text-center small">
+          <strong>Precision</strong><br>
+          {{ "%.2f"|format(precision * 100) if precision else 0 }}%
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="border rounded p-2 text-center small">
+          <strong>Recall</strong><br>
+          {{ "%.2f"|format(recall * 100) if recall else 0 }}%
+        </div>
+      </div>
+
+    </div>
+
+    <div class="text-muted small mt-3">
+      • MAE kecil → Prediksi akurat<br>
+      • Precision tinggi → Rekomendasi tepat<br>
+      • Recall tinggi → Item relevan banyak ditemukan
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

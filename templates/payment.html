@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container my-5" style="max-width:800px;">
+
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-header bg-light">
+      <h5 class="mb-0 fw-semibold">Pembayaran Transfer Bank</h5>
+    </div>
+
+    <div class="card-body">
+
+      <div class="alert alert-info">
+        Silakan lakukan pembayaran sebelum pesanan diproses.
+      </div>
+
+      <!-- KODE BILLING -->
+      <div class="border rounded-3 p-3 mb-3 bg-light">
+        <div class="small text-muted">Kode Pembayaran (Virtual Account)</div>
+        <h4 class="fw-bold text-primary mb-0">
+          {{ order.kode_billing }}
+        </h4>
+      </div>
+
+      <!-- DETAIL -->
+      <ul class="list-group mb-4">
+
+  <li class="list-group-item d-flex justify-content-between">
+    <span>Subtotal Produk</span>
+    <span>{{ subtotal | rupiah }}</span>
+  </li>
+
+  <li class="list-group-item d-flex justify-content-between">
+    <span>Biaya Admin</span>
+    <span>{{ admin | rupiah }}</span>
+  </li>
+
+  <li class="list-group-item d-flex justify-content-between">
+    <span>Ongkos Kirim</span>
+    <span>{{ order.ongkir | rupiah }}</span>
+  </li>
+
+  <li class="list-group-item d-flex justify-content-between fw-bold bg-light">
+    <span>Total Pembayaran</span>
+    <strong class="text-primary">
+      {{ order.total_harga | rupiah }}
+    </strong>
+  </li>
+
+  <li class="list-group-item d-flex justify-content-between">
+    <span>Status</span>
+    <span class="badge bg-warning text-dark">
+      {{ order.status_pembayaran }}
+    </span>
+  </li>
+
+</ul>
+
+
+      <!-- INSTRUKSI -->
+      <div class="mb-4">
+        <h6>Instruksi Pembayaran</h6>
+        <ol class="small text-muted">
+          <li>Masuk ke aplikasi mobile banking</li>
+          <li>Pilih menu Transfer → Virtual Account</li>
+          <li>Masukkan kode VA di atas</li>
+          <li>Bayar sesuai total</li>
+          <li>Upload bukti pembayaran</li>
+        </ol>
+      </div>
+
+      <!-- FORM BUKTI -->
+      <form method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">
+            Upload Bukti Pembayaran
+          </label>
+          <input type="file"
+                 name="bukti"
+                 class="form-control"
+                 accept="image/*"
+                 required>
+        </div>
+
+        <button class="btn btn-primary w-100">
+          Konfirmasi Pembayaran
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

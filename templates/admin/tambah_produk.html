@@ -1,0 +1,225 @@
+{% extends "admin/admin_base.html" %}
+{% block content %}
+
+<div class="card shadow-sm">
+  <div class="card-header bg-dark text-white">
+    <h5 class="mb-0">Tambah Produk</h5>
+  </div>
+
+  <div class="card-body">
+    <form method="POST" enctype="multipart/form-data">
+
+      <!-- ================== INFORMASI DASAR ================== -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label">Nama Produk</label>
+          <input type="text" name="nama_produk" class="form-control" required>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Merek</label>
+          <input type="text" name="merek" class="form-control"
+                 placeholder="Contoh: Samsung, Oppo, Xiaomi" required>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label">Brand</label>
+          <select name="id_brand" class="form-select">
+            <option value="">-- Pilih Brand (Opsional) --</option>
+            {% for b in brands %}
+              <option value="{{ b.id_brand }}">{{ b.nama_brand }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Baterai (mAh)</label>
+          <input type="number" name="baterai"
+                 class="form-control"
+                 placeholder="Contoh: 5000" required>
+        </div>
+      </div>
+      <div class="row mb-3">
+
+  <div class="col-md-6">
+    <label class="form-label">Chipset</label>
+    <input type="text" name="chipset"
+           class="form-control"
+           placeholder="Contoh: Snapdragon 8 Gen 2">
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Layar</label>
+    <input type="text" name="layar"
+           class="form-control"
+           placeholder="Contoh: AMOLED 120Hz">
+  </div>
+
+</div>
+
+<div class="row mb-3">
+
+  <div class="col-md-6">
+    <label class="form-label">Kamera</label>
+    <input type="text" name="kamera"
+           class="form-control"
+           placeholder="Contoh: 50 MP">
+  </div>
+
+  <div class="col-md-6">
+    <label class="form-label">Sistem Operasi</label>
+    <input type="text" name="os"
+           class="form-control"
+           placeholder="Contoh: Android 14">
+  </div>
+
+</div>
+
+<div class="mb-3">
+  <label class="form-label">Fitur Tambahan</label>
+  <input type="text"
+         name="fitur"
+         class="form-control"
+         placeholder="Contoh: NFC, Fingerprint, IP68">
+</div>
+
+      <div class="mb-3">
+        <label class="form-label">Spesifikasi</label>
+        <textarea name="spesifikasi" class="form-control" rows="3"></textarea>
+      </div>
+
+      <!-- ================== GAMBAR ================== -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label">Gambar Utama</label>
+          <input type="file" name="gambar"
+                 accept="image/*"
+                 class="form-control" required>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Gambar Detail (maks 3)</label>
+          <input type="file" name="gambar_detail"
+                 accept="image/*"
+                 multiple class="form-control">
+          <small class="text-muted">Upload hingga 3 gambar tambahan.</small>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- ================== VARIAN PRODUK ================== -->
+      <h5 class="mt-4 mb-3">Varian Produk</h5>
+
+      <div id="varian-container"></div>
+
+      <button type="button"
+              class="btn btn-primary btn-sm"
+              onclick="tambahVarian()">
+        + Tambah Varian
+      </button>
+
+      <hr>
+
+      <!-- ================== SUBMIT ================== -->
+      <div class="text-end">
+        <button type="submit" class="btn btn-success">
+          Simpan Produk
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<!-- ================== SCRIPT VARIAN ================== -->
+<script>
+let varianIndex = 0;
+
+function tambahVarian() {
+    const container = document.getElementById("varian-container");
+
+    const html = `
+    <div class="card mb-3 p-3 shadow-sm" id="varian-${varianIndex}">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <strong>Varian ${varianIndex + 1}</strong>
+            <button type="button" class="btn btn-sm btn-danger"
+                    onclick="hapusVarian(${varianIndex})">
+                Hapus
+            </button>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <input type="number"
+                       name="ram_${varianIndex}"
+                       class="form-control"
+                       placeholder="RAM (GB)" required>
+            </div>
+            <div class="col-md-4">
+                <input type="number"
+                       name="storage_${varianIndex}"
+                       class="form-control"
+                       placeholder="Storage (GB)" required>
+            </div>
+            <div class="col-md-4">
+                <input type="number"
+                       name="harga_${varianIndex}"
+                       class="form-control"
+                       placeholder="Harga" required>
+            </div>
+        </div>
+
+        <label class="fw-semibold">Warna & Stok</label>
+        <div id="warna-container-${varianIndex}"></div>
+
+        <button type="button"
+                class="btn btn-success btn-sm mt-2"
+                onclick="tambahWarna(${varianIndex})">
+            + Tambah Warna
+        </button>
+    </div>
+    `;
+
+    container.insertAdjacentHTML("beforeend", html);
+    varianIndex++;
+}
+
+function hapusVarian(index) {
+    document.getElementById(`varian-${index}`).remove();
+}
+
+function tambahWarna(index) {
+    const container = document.getElementById(`warna-container-${index}`);
+
+    const html = `
+    <div class="row mb-2 align-items-center">
+        <div class="col-md-5">
+            <input type="text"
+                   name="warna_${index}[]"
+                   class="form-control"
+                   placeholder="Nama Warna" required>
+        </div>
+        <div class="col-md-5">
+            <input type="number"
+                   name="stok_${index}[]"
+                   class="form-control"
+                   placeholder="Stok" required>
+        </div>
+        <div class="col-md-2 text-end">
+            <button type="button"
+                    class="btn btn-outline-danger btn-sm"
+                    onclick="this.closest('.row').remove()">
+                X
+            </button>
+        </div>
+    </div>
+    `;
+
+    container.insertAdjacentHTML("beforeend", html);
+}
+</script>
+
+{% endblock %}

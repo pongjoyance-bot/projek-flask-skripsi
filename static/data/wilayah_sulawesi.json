@@ -1,0 +1,204 @@
+{
+  "Sulawesi Selatan": {
+    "Toraja Utara": [
+      "Baruppu",
+      "Rindingallo",
+      "Sa'dan",
+      "Kapala Pitu",
+      "Sesean",
+      "Sesean Suloara",
+      "Tallunglipu",
+      "Tikala",
+      "Tondon",
+      "Buntao",
+      "Buntao Rantebua",
+      "Nanggala",
+      "Rantebua",
+      "Rantepao"
+    ],
+    "Tana Toraja": [
+      "Makale",
+      "Makale Selatan",
+      "Makale Utara",
+      "Sangalla",
+      "Sangalla Selatan",
+      "Sangalla Utara"
+    ],
+    "Luwu": [
+      "Belopa",
+      "Bajo",
+      "Bua",
+      "Ponrang"
+    ],
+    "Luwu Utara": [
+      "Masamba",
+      "Baebunta",
+      "Malangke"
+    ],
+    "Luwu Timur": [
+      "Malili",
+      "Towuti",
+      "Wasuponda"
+    ],
+    "Enrekang": [
+      "Enrekang",
+      "Baraka",
+      "Alla"
+    ],
+    "Bone": [
+      "Watampone",
+      "Tanete Riattang",
+      "Barebbo"
+    ],
+    "Gowa": [
+      "Somba Opu",
+      "Bontomarannu",
+      "Pallangga"
+    ],
+    "Maros": [
+      "Turikale",
+      "Mandai",
+      "Bantimurung"
+    ],
+    "Pinrang": [
+      "Watang Sawitto",
+      "Suppa",
+      "Mattiro Sompe"
+    ],
+    "Sidrap": [
+      "Maritengngae",
+      "Panca Rijang",
+      "Dua Pitue"
+    ],
+    "Wajo": [
+      "Tempe",
+      "Pammana",
+      "Pitumpanua"
+    ],
+    "Takalar": [
+      "Pattallassang",
+      "Galesong",
+      "Polombangkeng"
+    ],
+    "Bulukumba": [
+      "Ujung Bulu",
+      "Bonto Bahari",
+      "Kajang"
+    ],
+    "Sinjai": [
+      "Sinjai Utara",
+      "Sinjai Selatan",
+      "Tellulimpoe"
+    ],
+    "Kota Makassar": [
+      "Rappocini",
+      "Panakkukang",
+      "Tamalate",
+      "Biringkanaya",
+      "Ujung Pandang"
+    ],
+    "Kota Parepare": [
+      "Bacukiki",
+      "Ujung",
+      "Soreang"
+    ],
+    "Kota Palopo": [
+      "Wara",
+      "Wara Selatan",
+      "Wara Timur"
+    ]
+  },
+
+  "Sulawesi Utara": {
+    "Minahasa": [
+      "Tondano Timur",
+      "Tondano Barat",
+      "Kawangkoan"
+    ],
+    "Minahasa Utara": [
+      "Airmadidi",
+      "Likupang Timur"
+    ],
+    "Bolaang Mongondow": [
+      "Lolak",
+      "Dumoga"
+    ],
+    "Kota Manado": [
+      "Wenang",
+      "Malalayang",
+      "Mapanget"
+    ]
+  },
+
+  "Sulawesi Tengah": {
+    "Donggala": [
+      "Banawa",
+      "Sindue"
+    ],
+    "Poso": [
+      "Poso Kota",
+      "Lage"
+    ],
+    "Sigi": [
+      "Sigi Biromaru",
+      "Marawola"
+    ],
+    "Kota Palu": [
+      "Palu Barat",
+      "Palu Timur"
+    ]
+  },
+
+  "Sulawesi Tenggara": {
+    "Kolaka": [
+      "Kolaka",
+      "Wundulako"
+    ],
+    "Buton": [
+      "Pasarwajo",
+      "Kapontori"
+    ],
+    "Konawe": [
+      "Unaaha",
+      "Wawotobi"
+    ],
+    "Kota Kendari": [
+      "Mandonga",
+      "Poasia"
+    ],
+    "Kota Baubau": [
+      "Betoambari",
+      "Murhum"
+    ]
+  },
+
+  "Gorontalo": {
+    "Gorontalo": [
+      "Limboto",
+      "Telaga"
+    ],
+    "Bone Bolango": [
+      "Suwawa",
+      "Kabila"
+    ],
+    "Kota Gorontalo": [
+      "Kota Barat",
+      "Kota Timur"
+    ]
+  },
+
+  "Sulawesi Barat": {
+    "Mamuju": [
+      "Mamuju",
+      "Kalukku"
+    ],
+    "Majene": [
+      "Banggae",
+      "Pamboang"
+    ],
+    "Polewali Mandar": [
+      "Polewali",
+      "Wonomulyo"
+    ]
+  }
+}

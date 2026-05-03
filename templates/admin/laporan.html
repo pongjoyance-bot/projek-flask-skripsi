@@ -1,0 +1,52 @@
+{% extends "admin/admin_base.html" %}
+{% block content %}
+
+
+<h4>Laporan Penjualan</h4>
+
+
+
+<form method="POST" class="row mb-3">
+  <div class="col-md-4">
+    <input type="date" name="start_date" class="form-control" value="{{ start }}">
+  </div>
+  <div class="col-md-4">
+    <input type="date" name="end_date" class="form-control" value="{{ end }}">
+  </div>
+  <div class="col-md-2">
+    <button class="btn btn-dark w-100">Filter</button>
+  </div>
+  <div class="col-md-2">
+    <a href="{{ url_for('export_laporan_excel', start=start, end=end) }}"
+       class="btn btn-success w-100">
+      Export Excel
+    </a>
+  </div>
+</form>
+
+
+<table class="table table-bordered table-striped">
+  <thead class="table-dark text-center">
+    <tr>
+      <th>Tanggal</th>
+      <th>Pembeli</th>
+      <th>Produk</th>
+      <th>Jumlah</th>
+      <th>Subtotal</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for l in laporan %}
+    <tr>
+      <td>{{ l.tanggal }}</td>
+      <td>{{ l.nama_pembeli }}</td>
+      <td>{{ l.nama_produk }}</td>
+      <td>{{ l.jumlah }}</td>
+
+<td>{{ l.subtotal | rupiah }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

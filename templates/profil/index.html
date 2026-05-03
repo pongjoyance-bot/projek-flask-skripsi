@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Profil{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+
+    <!-- SIDEBAR -->
+    <div class="col-md-3">
+      <div class="list-group shadow-sm">
+
+        <button class="list-group-item list-group-item-action"
+                onclick="showSection('akun')">
+          👤 Akun Saya
+        </button>
+
+        <button class="list-group-item list-group-item-action"
+                onclick="showSection('pesanan')">
+          📦 Pesanan Saya
+        </button>
+
+        <a href="{{ url_for('logout') }}"
+           class="list-group-item list-group-item-action text-danger">
+          🚪 Logout
+        </a>
+
+      </div>
+    </div>
+
+    <!-- KONTEN -->
+    <div class="col-md-9">
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">Profil Saya</h4>
+
+  <a href="{{ url_for('home') }}"
+     class="btn btn-outline-secondary btn-sm">
+    ← Kembali ke Beranda
+  </a>
+</div>
+
+
+      <div class="card p-4 shadow-sm">
+
+        <div id="section-akun">
+          {% include "profil/akun_section.html" %}
+        </div>
+
+        <div id="section-pesanan" style="display:none;">
+          {% include "profil/_pesanan_list.html" %}
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function showSection(name) {
+  document.getElementById("section-akun").style.display = "none";
+  document.getElementById("section-pesanan").style.display = "none";
+  document.getElementById("section-" + name).style.display = "block";
+}
+</script>
+{% endblock %}
