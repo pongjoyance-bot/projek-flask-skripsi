@@ -29,13 +29,12 @@ import os
 import mysql.connector
 
 db = mysql.connector.connect(
-    host=os.getenv("MYSQLHOST"),
-    user=os.getenv("MYSQLUSER"),
-    password=os.getenv("MYSQLPASSWORD"),
-    database=os.getenv("MYSQLDATABASE"),
+    host=os.getenv("MYSQLHOST", "localhost"),
+    user=os.getenv("MYSQLUSER", "root"),
+    password=os.getenv("MYSQLPASSWORD", ""),
+    database=os.getenv("MYSQLDATABASE", "aktivasi_acount"),
     port=int(os.getenv("MYSQLPORT", 3306))
 )
-
 
 cursor = db.cursor(dictionary=True,buffered=True)
 @app.context_processor
