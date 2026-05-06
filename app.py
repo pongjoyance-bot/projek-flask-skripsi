@@ -25,28 +25,21 @@ app = Flask(__name__)
 app.secret_key = "ini_secret_key_saya"
 import os
 import mysql.connector
+from urllib.parse import urlparse
 
-host = os.getenv("MYSQLHOST")
-user = os.getenv("MYSQLUSER")
-password = os.getenv("MYSQLPASSWORD")
-database = os.getenv("MYSQLDATABASE")
-port = int(os.getenv("MYSQLPORT", 3306))
+url = os.getenv("MYSQL_PUBLIC_URL")
 
-print("=== DEBUG ENV ===")
-print("MYSQLHOST:", host)
-print("MYSQLUSER:", user)
-print("MYSQLDATABASE:", database)
-print("=================")
+if not url:
+    raise Exception("MYSQL_PUBLIC_URL tidak ditemukan!")
 
-if not host:
-    raise Exception("MYSQLHOST tidak terbaca di Railway!")
+parsed = urlparse(url)
 
 db = mysql.connector.connect(
-    host=host,
-    user=user,
-    password=password,
-    database=database,
-    port=port
+    host=parsed.hostname,
+    user=parsed.username,
+    password=parsed.password,
+    database=parsed.path.replace("/", ""),
+    port=parsed.port
 )
 cursor = db.cursor(dictionary=True,buffered=True)
 @app.context_processor
