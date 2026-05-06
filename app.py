@@ -26,14 +26,14 @@ app.secret_key = "ini_secret_key_saya"
 import sqlite3
 
 import os
+import mysql.connector
 
-#  Koneksi ke Database
 db = mysql.connector.connect(
-    host=os.getenv("DB_HOST"),
-    user=os.getenv("DB_USER"),
-    password=os.getenv("DB_PASSWORD"),
-    database=os.getenv("DB_NAME"),
-    port=int(os.getenv("DB_PORT", 3306))
+    host=os.getenv("MYSQLHOST"),
+    user=os.getenv("MYSQLUSER"),
+    password=os.getenv("MYSQLPASSWORD"),
+    database=os.getenv("MYSQLDATABASE"),
+    port=int(os.getenv("MYSQLPORT", 3306))
 )
 
 
@@ -61,15 +61,6 @@ def inject_wishlist_count():
         result = cursor.fetchone()
         return dict(wishlist_count=result["total"] if result else 0)
     return dict(wishlist_count=0)
-
-#  Koneksi ke Database
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="",  
-    database="aktivasi_acount",  
-)
-cursor = db.cursor(dictionary=True,buffered=True)
 
 
 
