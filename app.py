@@ -26,11 +26,20 @@ app.secret_key = "ini_secret_key_saya"
 import os
 import mysql.connector
 
-host = os.getenv("MYSQLHOST") or "localhost"
-user = os.getenv("MYSQLUSER") or "root"
-password = os.getenv("MYSQLPASSWORD") or ""
-database = os.getenv("MYSQLDATABASE") or "aktivasi_acount"
-port = int(os.getenv("MYSQLPORT") or 3306)
+host = os.getenv("MYSQLHOST")
+user = os.getenv("MYSQLUSER")
+password = os.getenv("MYSQLPASSWORD")
+database = os.getenv("MYSQLDATABASE")
+port = int(os.getenv("MYSQLPORT", 3306))
+
+print("=== DEBUG ENV ===")
+print("MYSQLHOST:", host)
+print("MYSQLUSER:", user)
+print("MYSQLDATABASE:", database)
+print("=================")
+
+if not host:
+    raise Exception("MYSQLHOST tidak terbaca di Railway!")
 
 db = mysql.connector.connect(
     host=host,
@@ -39,7 +48,6 @@ db = mysql.connector.connect(
     database=database,
     port=port
 )
-
 cursor = db.cursor(dictionary=True,buffered=True)
 @app.context_processor
 def inject_cart_count():
