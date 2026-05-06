@@ -23,17 +23,21 @@ from functools import lru_cache
 
 app = Flask(__name__)
 app.secret_key = "ini_secret_key_saya"
-import sqlite3
-
 import os
 import mysql.connector
 
+host = os.getenv("MYSQLHOST") or "localhost"
+user = os.getenv("MYSQLUSER") or "root"
+password = os.getenv("MYSQLPASSWORD") or ""
+database = os.getenv("MYSQLDATABASE") or "aktivasi_acount"
+port = int(os.getenv("MYSQLPORT") or 3306)
+
 db = mysql.connector.connect(
-    host=os.getenv("MYSQLHOST", "localhost"),
-    user=os.getenv("MYSQLUSER", "root"),
-    password=os.getenv("MYSQLPASSWORD", ""),
-    database=os.getenv("MYSQLDATABASE", "aktivasi_acount"),
-    port=int(os.getenv("MYSQLPORT", 3306))
+    host=host,
+    user=user,
+    password=password,
+    database=database,
+    port=port
 )
 
 cursor = db.cursor(dictionary=True,buffered=True)
